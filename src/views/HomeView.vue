@@ -6,8 +6,7 @@ export default {
       message: "Music App",
       songs: [],
       newSong: {},
-      currentSong: {},
-      editingSong: {}
+      currentSong: {}
     };
   },
   created: function () {
@@ -42,7 +41,7 @@ export default {
       document.querySelector("#song-edit").showModal();
     },
     updateSong: function () {
-      axios.patch(`/songs/${this.editingSong.id}`, this.editingSong).then(
+      axios.patch(`/songs/${this.currentSong.id}`, this.currentSong).then(
         response => {
           console.log(response.data);
         }
