@@ -6,7 +6,8 @@ export default {
       message: "Music App",
       songs: [],
       newSong: {},
-      currentSong: {}
+      currentSong: {},
+      editingSong: {}
     };
   },
   created: function () {
@@ -34,6 +35,25 @@ export default {
       this.currentSong = song;
       console.log(this.currentSong);
       document.querySelector("#song-details").showModal();
+    },
+    editSong: function (song) {
+      this.currentSong = song;
+      console.log(this.currentSong);
+      document.querySelector("#song-edit").showModal();
+    },
+    updateSong: function () {
+      axios.patch(`/songs/${this.editingSong.id}`, this.editingSong).then(
+        response => {
+          console.log(response.data);
+        }
+      )
+    },
+    destroySong: function (currentSong) {
+      axios.delete(`/songs/${currentSong.id}`).then(
+        response => {
+          console.log(response.data);
+        }
+      )
     },
     sortByTitle: function () {
       this.songs = this.songs.sort((a, b) => (a.title > b.title) ? 1 : -1);
@@ -65,6 +85,7 @@ export default {
     <ul>
       <li v-for="song in songs">
         <button v-on:click="showSong(song)">Details</button>
+        <button v-on:click="editSong(song)">Edit</button>
         {{ song.title }} &#8211; {{ song.artist }}
       </li>
     </ul>
@@ -76,6 +97,23 @@ export default {
       <p>Artist: {{ currentSong.artist }}</p>
       <p>Album: {{ currentSong.album }}</p>
       <p>Year: {{ currentSong.year }}</p>
+      <button v-on:click="destroySong(currentSong)">Delete Song</button>
+      <button>Close</button>
+    </form>
+  </dialog>
+
+  <dialog id="song-edit">
+    <form method="dialog">
+      Song Title:
+      <input v-model="currentSong.title" />
+      <br />Artist:
+      <input v-model="currentSong.artist" />
+      <br />Album:
+      <input v-model="currentSong.album" />
+      <br />Year:
+      <input v-model="currentSong.year" />
+      <br />
+      <button v-on:click="updateSong()">Save Song</button>
       <button>Close</button>
     </form>
   </dialog>
